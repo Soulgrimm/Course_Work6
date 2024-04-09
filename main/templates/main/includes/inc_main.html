@@ -1,0 +1,55 @@
+<!--<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">-->
+<!--    <h5 class="my-0 mr-md-auto font-weight-normal">Skystore</h5>-->
+<!--    <nav class="ms-5">-->
+<!--        <a class="p-2 btn btn-outline-primary">Каталог</a>-->
+<!--        <a class="p-2 btn btn-outline-primary">Блог</a>-->
+<!--        <a class="p-2 btn btn-outline-primary">Контакты</a>-->
+<!--    </nav>-->
+<!--</div>-->
+<header data-bs-theme="dark">
+    <div class="collapse text-bg-dark" id="navbarHeader">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8 col-md-7 py-4">
+                    <h4>Рассылка</h4>
+                    <p class="text-body-secondary">Email-рассылка — это отправка писем по электронной почте определенной
+                        группе адресатов. Такой вид коммуникации — важная часть любой маркетинговой кампании, так как
+                        позволяет построить доверительные отношения с клиентами и повысить продажи.</p>
+                </div>
+                <div class="col-sm-4 offset-md-1 py-4">
+                    <h4>Сервис</h4>
+                    <ul class="list">
+                        <li><a href="{% url 'main:mailing' %}" class="text">Рассылки</a></li>
+                        <li><a href="{% url 'main:clients' %}" class="text">Клиенты сервиса</a></li>
+                        <li><a href="{% url 'main:messages' %}" class="text">Сообщения рассылок</a></li>
+                        <li><a href="{% url 'blog:list' %}" class="text">Блог</a></li>
+                        {% if user.is_authenticated %}
+                            <li><a href="{% url 'users:profile' %}" class="text">Профиль</a></li>
+                            <li><a href="{% url 'users:logout' %}" class="text">Выйти</a></li>
+                        {% else %}
+                            <li><a href="{% url 'users:login' %}" class="text">Войти</a></li>
+                            <li><a href="{% url 'users:register' %}" class="text">Регистрация</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <a href="#" class="navbar-brand d-flex align-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+                     stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true" class="me-2"
+                     viewBox="0 0 24 24">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                    <circle cx="12" cy="13" r="4"/>
+                </svg>
+                <strong>Mailing</strong>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader"
+                    aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </div>
+</header>

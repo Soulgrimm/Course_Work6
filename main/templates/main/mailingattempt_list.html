@@ -1,0 +1,40 @@
+{% extends 'main/base.html' %}
+{% block content %}
+
+<div class="col-12 mb-4">
+    <a class="btn btn-outline-primary" href="{% url 'main:add_client' %}">Добавить Клиента</a>
+</div>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Email</th>
+        <th scope="col">Полное имя</th>
+        <th scope="col">Сообщение</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for object in object_list %}
+    <tr>
+        <td>{{ object.last_attempt_time }}</td>
+        <td>{{ object.attempt_status }}</td>
+        <td>{{ object.server_response }}</td>
+        <td>
+            <div class="dropdown">
+                <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    Действие
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" href="{% url 'main:view_client' object.pk %}">Просмотр</a></li>
+                    <li><a class="dropdown-item" href="{% url 'main:update_client' object.pk %}">Изменить</a></li>
+                    <li><a class="dropdown-item" href="{% url 'main:delete_client' object.pk %}">Удалить</a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+    {% endfor %}
+</table>
+
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'main/base.html' %}
+{% block content %}
+
+<div class="col-12 mb-4">
+    {% if user.is_authenticated %}
+    <a class="btn btn-outline-primary" href="{% url 'main:create' %}">Добавить рассылку</a>
+    {% endif %}
+</div>
+
+<div class="row text-center">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Рассылка</th>
+            <th scope="col">Время первой отправки</th>
+            <th scope="col">Emails</th>
+            <th scope="col">Периодичность</th>
+            <th scope="col">Статус</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for object in object_list %}
+        <tr>
+            <th scope="row">{{object.pk}}</th>
+            <td>{{object.time_first_sending}}</td>
+            <td scope="row">{% for value in object.clients.all.values_list %}
+                <oli>{{value.1}}</oli>
+                <br>
+                {% endfor%}
+            </td>
+            <td>{{object.periodicity}}</td>
+            <td>{{object.status}}</td>
+            <td>
+                {% if user.is_authenticated %}
+                {% if request.user == object.is_author or user.is_staff %}
+                <div class="dropdown">
+                    <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton1"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        Действие
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="{% url 'main:view' object.pk %}">Просмотр</a></li>
+                        <li><a class="dropdown-item" href="{% url 'main:update' object.pk %}">Изменить</a></li>
+                        {% endif %}
+                        {% if request.user == object.is_author %}
+                        <li><a class="dropdown-item" href="{% url 'main:delete' object.pk %}">Удалить</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                {% endif %}
+            </td>
+        </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}

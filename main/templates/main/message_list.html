@@ -1,0 +1,31 @@
+{% extends 'main/base.html' %}
+{% block content %}
+
+<div class="col-12 mb-4">
+    <a class="btn btn-outline-primary" href="{% url 'main:add_message' %}">Добавить сообщение</a>
+</div>
+<div class="row text-center">
+    {% for object in object_list %}
+    <div class="col-3">
+        <div class="card mb-4 box-shadow">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">Тема: {{object.theme}}</h4>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ object.message|truncatechars:100 }}</p>
+            </div>
+            <div class="body-footer">
+                <div class="btn-group">
+                    <a href="{% url 'main:view_message' object.pk %}"
+                       class="btn btn-sm btn-outline-secondary">Просмотр</a>
+                    <a href="{% url 'main:update_message' object.pk %}" type="button"
+                       class="btn btn-sm btn-outline-secondary">Изменить</a>
+                    <a href="{% url 'main:delete_message' object.pk %}" type="button"
+                       class="btn btn-sm btn-outline-danger">Удалить</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
