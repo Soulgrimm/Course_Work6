@@ -13,11 +13,11 @@ class StyleForMixin:
 class MailingForm(StyleForMixin, forms.ModelForm):
     class Meta:
         model = SendingMessage
-        exclude = ('status', 'is_active',)
+        exclude = ('status', 'is_active', 'is_author')
 
 
 class MailingUpdate(forms.ModelForm):
     class Meta:
         model = SendingMessage
-        exclude = ('status', 'is_active',)
+        exclude = ('status', 'is_active', 'is_author')
 

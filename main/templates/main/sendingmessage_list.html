@@ -41,6 +41,7 @@
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                         <li><a class="dropdown-item" href="{% url 'main:view' object.pk %}">Просмотр</a></li>
                         <li><a class="dropdown-item" href="{% url 'main:update' object.pk %}">Изменить</a></li>
+                        <li><a class="dropdown-item" href="{% url 'main:attempts' %}">Попытки</a></li>
                         {% endif %}
                         {% if request.user == object.is_author %}
                         <li><a class="dropdown-item" href="{% url 'main:delete' object.pk %}">Удалить</a></li>

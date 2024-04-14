@@ -9,8 +9,11 @@ from main.models import SendingMessage, MailingAttempt
 
 
 def send_mailling(mailing):
+    print(mailing)
     current_time = timezone.localtime(timezone.now())
+    print(mailing.time_first_sending)
     print(current_time)
+    print(mailing.time_first_sending <= current_time)
     if mailing.time_first_sending <= current_time:
         mailing.status = SendingMessage.STARTED
         mailing.save()
@@ -50,6 +53,20 @@ def send_mailling(mailing):
 
 def daily_mailings():
     mailings = SendingMessage.objects.filter(periodicity="Раз в день")
+    if mailings.exists():
+        for mailing in mailings:
+            send_mailling(mailing)
+
+
+def weekly_mailings():
+    mailings = SendingMessage.objects.filter(periodicity="Раз в неделю")
+    if mailings.exists():
+        for mailing in mailings:
+            send_mailling(mailing)
+
+
+def monthly_mailings():
+    mailings = SendingMessage.objects.filter(periodicity="Раз в месяц")
     if mailings.exists():
         for mailing in mailings:
             send_mailling(mailing)
