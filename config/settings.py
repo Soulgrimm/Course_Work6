@@ -147,9 +147,7 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 
 CRONJOBS = [
-    ('* * * * *', 'main.cron.daily_mailings'),
-    ('* * */7 * *', 'main.cron.weekly_mailings'),
-    ('* * * */1 *', 'main.cron.monthly_mailings'),
+    ('*/1 * * * *', 'main.cron.daily_mailings'),
 ]
 
 CACHE_ENABLE = os.getenv('CACHE_ENABLE') == 'True'

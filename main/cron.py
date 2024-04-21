@@ -1,6 +1,7 @@
 from django.conf import settings
 
 from django.core.mail import send_mail
+from datetime import timedelta
 from config import settings
 from django.utils import timezone
 from smtplib import SMTPException
@@ -8,15 +9,19 @@ from smtplib import SMTPException
 from main.models import SendingMessage, MailingAttempt
 
 
-def send_mailling(mailing):
-    print(mailing)
+def send_mailing():
     current_time = timezone.localtime(timezone.now())
-    print(mailing.time_first_sending)
-    print(current_time)
-    print(mailing.time_first_sending <= current_time)
-    if mailing.time_first_sending <= current_time:
-        mailing.status = SendingMessage.STARTED
-        mailing.save()
+
+    sends = SendingMessage.objects.all()
+    for send in sends:
+        if send.status == 'Создана':
+            send.time_next_sending = send.time_first_sending
+            send.save()
+        else:
+            continue
+
+    mailing_list = SendingMessage.objects.filter(time_next_sending__lte=current_time)
+    for mailing in mailing_list:
         for client in mailing.clients.all():
             try:
                 result = send_mail(
@@ -24,49 +29,35 @@ def send_mailling(mailing):
                     message=mailing.message_to.message,
                     from_email=settings.EMAIL_HOST_USER,
                     recipient_list=[client.email],
-                    fail_silently=False
+                    fail_silently=False,
                 )
                 attempt = MailingAttempt.objects.create(
-                    last_attempt_time=mailing.time_first_sending,
+                    last_attempt_time=mailing.time_next_sending,
                     attempt_status=result,
                     server_response='Успешно',
                     sending_list=mailing,
                     client=client
                 )
                 attempt.save()
+                if mailing.periodicity == 'Раз в день':
+                    mailing.time_next_sending = mailing.time_next_sending + timedelta(days=1)
+                    mailing.status = 'Запущена'
+                elif mailing.periodicity == 'Раз в неделю':
+                    mailing.time_next_sending = mailing.time_next_sending + timedelta(days=7)
+                    mailing.status = 'Запущена'
+                elif mailing.periodicity == 'Раз в месяц':
+                    mailing.time_next_sending = mailing.time_next_sending + timedelta(days=30)
+                    mailing.status = 'Запущена'
+                mailing.save()
                 return attempt
 
             except SMTPException as error:
                 attempt = MailingAttempt.objects.create(
-                    last_attempt_time=mailing.time_first_sending,
+                    last_attempt_time=mailing.time_next_sending,
                     attempt_status=False,
                     server_response=error,
                     sending_list=mailing,
-                    client=client
+                    client=client,
                 )
                 attempt.save()
-            return attempt
-    else:
-        mailing.status = SendingMessage.FINISHED
-        mailing.save()
-
-
-def daily_mailings():
-    mailings = SendingMessage.objects.filter(periodicity="Раз в день")
-    if mailings.exists():
-        for mailing in mailings:
-            send_mailling(mailing)
-
-
-def weekly_mailings():
-    mailings = SendingMessage.objects.filter(periodicity="Раз в неделю")
-    if mailings.exists():
-        for mailing in mailings:
-            send_mailling(mailing)
-
-
-def monthly_mailings():
-    mailings = SendingMessage.objects.filter(periodicity="Раз в месяц")
-    if mailings.exists():
-        for mailing in mailings:
-            send_mailling(mailing)
+                return attempt

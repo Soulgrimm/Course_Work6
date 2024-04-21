@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from django.db import models
 from django.conf import settings
 
@@ -61,6 +63,7 @@ class SendingMessage(models.Model):
     ]
 
     time_first_sending = models.DateTimeField(verbose_name='Время первой отправки')
+    time_next_sending = models.DateTimeField(default=timezone.now, verbose_name='Дата следующей отправки')
     periodicity = models.CharField(max_length=100, choices=PERIODICITY_MAILING, verbose_name='Периодичность отправки')
     status = models.CharField(default=CREATED, choices=STATUS_CHOICES, max_length=50, verbose_name='Статус рассылки')
     is_active = models.BooleanField(default=True)
